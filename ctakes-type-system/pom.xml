@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<artifactId>ctakes-type-system</artifactId>
+	<name>Apache cTAKES common type system</name>
+	<description>Defines the cTAKES type system UIMA annotation classes.</description>
+	<parent>
+		<groupId>org.example</groupId>
+		<artifactId>ctake-playground</artifactId>
+		<version>1.0-SNAPSHOT</version>
+	</parent>
+	<dependencies>
+		<dependency>
+			<groupId>org.apache.uima</groupId>
+			<artifactId>uimaj-core</artifactId>
+			<version>${uima.version}</version>
+		</dependency>
+		<!-- we excluded spring-context in the parent pom, include it here -->
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-context</artifactId>
+			<version>${spring.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-beans</artifactId>
+			<version>${spring.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>tw.edu.ntu.csie</groupId>
+			<artifactId>libsvm</artifactId>
+			<version>${libsvm.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.uima</groupId>
+			<artifactId>uimafit-core</artifactId>
+			<version>${uima.version}</version>
+		</dependency>
+	</dependencies>
+	<build>
+		<plugins>
+				<plugin>
+				  <groupId>org.apache.uima</groupId>
+				  <artifactId>jcasgen-maven-plugin</artifactId>
+				  <version>${uima.version}</version>
+				  <executions>
+				    <execution>
+				      <goals><goal>generate</goal></goals>
+				      <configuration>
+				        <typeSystemIncludes>
+                            <typeSystemInclude>src/main/resources/org/apache/ctakes/typesystem/types/TypeSystem.xml
+                            </typeSystemInclude>
+				        </typeSystemIncludes>
+                          <limitToProject>true</limitToProject>
+				      </configuration>
+				    </execution>
+				    </executions>
+				</plugin>
+		</plugins>				
+ 	</build>
+</project>
