@@ -48,13 +48,17 @@ public class Runner {
         @Override
         public void apply(JCas jCas) {
             jCas.<Annotation>select()
-                    .filter(anno -> anno instanceof IdentifiedAnnotation)
+                    .filter(anno -> anno instanceof IdentifiedAnnotation && !(anno instanceof ContextAnnotation))
                     .forEach(anno -> {
-                        if(((IdentifiedAnnotation) anno).getPolarity() != 0) {
-                            negatedTerms.add(
-                                    new Runner.NegatedTerm(anno.getCoveredText(), anno.getType().getShortName(), anno._casView.getView("UriView").getSofaDataURI(), anno.getBegin())
-                            );
-                        }
+                        negatedTerms.add(
+                                    new Runner.NegatedTerm(
+                                            anno.getCoveredText().trim(),
+                                            anno.getType().getShortName(),
+                                            anno._casView.getView("UriView").getSofaDataURI(),
+                                            anno.getBegin(),
+                                            ((IdentifiedAnnotation) anno).getPolarity() != 0
+                                    )
+                        );
                     });
         }
     }
@@ -72,7 +76,6 @@ public class Runner {
                 ChunkAdjuster.createAnnotatorDescription(new String[]{"NP", "PP", "NP"}, 2),
                 DefaultJCasTermAnnotator.createAnnotatorDescription("/org/apache/ctakes/dictionary/lookup/david/custom.xml"),
                 AnalysisEngineFactory.createEngineDescription(IdentificationAnnotator.class),
-                //DefaultJCasTermAnnotator.createAnnotatorDescription("C:\\Users\\wanggu\\IdeaProjects\\ctake-playground\\negex\\src\\main\\resources\\org\\apache\\ctakes\\dictionary\\lookup\\david\\custom.xml"),
                 AnalysisEngineFactory.createEngineDescription(NegexAnnotator.class),
                 AnalysisEngineFactory.createEngineDescription(LineWriter.class, LineWriter.CONSUMER_CLASS_NAME, "org.example.ctakesplayground.Runner$NegatedTermReader")
                 );
@@ -91,7 +94,7 @@ public class Runner {
         try(var writer = Files.newBufferedWriter(outputPath)) {
             negatedTerms.forEach(nt -> {
                 try {
-                    writer.write(String.format("%s\t%d\t%s\t%s", nt.lineno, nt.start, nt.text, nt.type));
+                    writer.write(String.format("%s\t%d\t%s\t%s\t%d", nt.lineno, nt.start, nt.text, nt.type, nt.negated ? 1 : 0));
                     writer.newLine();
                 } catch (IOException e) {
                     e.printStackTrace();
@@ -209,5 +212,5 @@ public class Runner {
             });
         }*/
     }
-    public record NegatedTerm(String text, String type, String lineno, int start){}
+    public record NegatedTerm(String text, String type, String lineno, int start, boolean negated){}
 }

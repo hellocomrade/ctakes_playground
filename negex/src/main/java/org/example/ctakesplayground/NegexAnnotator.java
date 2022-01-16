@@ -503,8 +503,8 @@ public class NegexAnnotator extends JCasAnnotator_ImplBase {
                 if (bUnoccupied) {
                     // mark the range in the sentence with this token
                     // black it out so other rules do not match
-                    NegexToken t = new NegexToken(m.start(), m.end(), rule);
-                    for (int i = m.start(); i < m.end() && bUnoccupied; i++) {
+                    NegexToken t = new NegexToken(m.start(1), m.end(1), rule);
+                    for (int i = m.start(1); i < m.end(1) && bUnoccupied; i++) {
                         // black out this range from the char buffer
                         buf.put(i, '_');
                         // add the token to the array
