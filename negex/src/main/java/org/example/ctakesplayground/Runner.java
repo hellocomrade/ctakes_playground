@@ -81,15 +81,31 @@ public class Runner {
                 );
     }
 
-    public static void main(String[] args) throws ResourceInitializationException, AnalysisEngineProcessException, IOException, CollectionException {
+    public static void runSingleFilePipeline(String fileName) throws ResourceInitializationException, CollectionException, IOException, AnalysisEngineProcessException {
         SimplePipeline.runPipeline(
                 CollectionReaderFactory.createReaderDescription(
                         LineReader.class,
                         LineReader.PARAM_FILE_NAME,
-                        args[0])
+                        fileName)
                 ,
                 buildPipeline()
         );
+    }
+
+    public static void runFilesInFolderPipeline(String dirName) throws ResourceInitializationException, CollectionException, IOException, AnalysisEngineProcessException {
+        SimplePipeline.runPipeline(
+                CollectionReaderFactory.createReaderDescription(
+                        FolderReader.class,
+                        FolderReader.PARAM_DIR_NAME,
+                        dirName)
+                ,
+                buildPipeline()
+        );
+    }
+
+    public static void main(String[] args) throws ResourceInitializationException, AnalysisEngineProcessException, IOException, CollectionException {
+        //runSingleFilePipeline(args[0]);
+        runFilesInFolderPipeline(args[0]);
         var outputPath = Paths.get("output.txt");
         try(var writer = Files.newBufferedWriter(outputPath)) {
             negatedTerms.forEach(nt -> {

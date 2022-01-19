@@ -96,9 +96,8 @@ public class Multithreadable {
         LifeCycleUtil.destroy(resourceManager);
     }
 
-    public static void main(String[] args) throws ResourceInitializationException, IOException {
-        Multithreadable mt = new Multithreadable(3, 0);
-        try(var lines = Files.lines(Path.of(args[0]))) {
+    private static void singleFile(Multithreadable mt, String fileName) {
+        try(var lines = Files.lines(Path.of(fileName))) {
             lines.parallel().forEach(line -> {
                 var cols = line.split("\t");
                 mt.anaylze(cols[2], cols[0]);
@@ -107,7 +106,31 @@ public class Multithreadable {
             e.printStackTrace();
             throw new UncheckedIOException(e);
         }
-        var outputPath = Paths.get("output.txt");
+    }
+
+    private static void files(Multithreadable mt, String dirName) {
+        try(var lines = Files.list(Path.of(dirName))) {
+            lines.parallel().forEach(p -> {
+                if(Files.isRegularFile(p)) {
+                    try {
+                        mt.anaylze(new String(Files.readAllBytes(p)), p.getFileName().toString());
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
+        } catch (IOException e) {
+            e.printStackTrace();
+            throw new UncheckedIOException(e);
+        }
+    }
+
+    public static void main(String[] args) throws ResourceInitializationException, IOException {
+        Multithreadable mt = new Multithreadable(3, 0);
+
+        files(mt, args[0]);
+
+        var outputPath = Paths.get("output1.txt");
         var negatedTerms = mt.getNegatedTerms();
         try(var writer = Files.newBufferedWriter(outputPath)) {
             negatedTerms.forEach(nt -> {
