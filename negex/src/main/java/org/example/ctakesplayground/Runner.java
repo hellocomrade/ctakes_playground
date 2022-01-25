@@ -8,6 +8,7 @@ import org.apache.ctakes.core.ae.TokenizerAnnotatorPTB;
 import org.apache.ctakes.dictionary.lookup2.ae.DefaultJCasTermAnnotator;
 import org.apache.ctakes.lvg.ae.LvgAnnotator;
 import org.apache.ctakes.lvg.ae.LvgBaseTokenAnnotator;
+import org.apache.ctakes.necontexts.ContextAnnotator;
 import org.apache.ctakes.postagger.POSTagger;
 import org.apache.ctakes.typesystem.type.textsem.*;
 import org.apache.uima.UIMAFramework;
@@ -76,7 +77,8 @@ public class Runner {
                 ChunkAdjuster.createAnnotatorDescription(new String[]{"NP", "PP", "NP"}, 2),
                 DefaultJCasTermAnnotator.createAnnotatorDescription("/org/apache/ctakes/dictionary/lookup/david/custom.xml"),
                 AnalysisEngineFactory.createEngineDescription(IdentificationAnnotator.class),
-                AnalysisEngineFactory.createEngineDescription(NegexAnnotator.class),
+                //AnalysisEngineFactory.createEngineDescription(NegexAnnotator.class),
+                AnalysisEngineFactory.createEngineDescription(ContextAnnotator.class),
                 AnalysisEngineFactory.createEngineDescription(LineWriter.class, LineWriter.CONSUMER_CLASS_NAME, "org.example.ctakesplayground.Runner$NegatedTermReader")
                 );
     }
