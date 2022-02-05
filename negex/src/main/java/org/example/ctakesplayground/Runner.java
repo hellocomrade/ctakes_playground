@@ -1,5 +1,6 @@
 package org.example.ctakesplayground;
 
+import org.apache.ctakes.assertion.medfacts.cleartk.windowed.PolarityCleartkAnalysisEngineWindowed;
 import org.apache.ctakes.chunker.ae.Chunker;
 import org.apache.ctakes.chunker.ae.adjuster.ChunkAdjuster;
 import org.apache.ctakes.contexttokenizer.ae.ContextDependentTokenizerAnnotator;
@@ -27,6 +28,7 @@ import org.apache.uima.fit.internal.ResourceManagerFactory;
 import org.apache.uima.fit.pipeline.SimplePipeline;
 import org.apache.uima.fit.util.LifeCycleUtil;
 import org.apache.uima.jcas.JCas;
+import org.apache.uima.jcas.cas.TOP;
 import org.apache.uima.jcas.tcas.Annotation;
 import org.apache.uima.resource.Resource;
 import org.apache.uima.resource.ResourceInitializationException;
@@ -48,16 +50,17 @@ public class Runner {
     public static class NegatedTermReader extends LineWriter.LineConsumer {
         @Override
         public void apply(JCas jCas) {
-            jCas.<Annotation>select()
-                    .filter(anno -> anno instanceof IdentifiedAnnotation && !(anno instanceof ContextAnnotation))
-                    .forEach(anno -> {
+            jCas.<TOP>select()
+                    .filter(top -> top instanceof IdentifiedAnnotation && !(top instanceof ContextAnnotation))
+                    .forEach(top -> {
+                        var anno = (IdentifiedAnnotation)top;
                         negatedTerms.add(
                                     new Runner.NegatedTerm(
                                             anno.getCoveredText().trim(),
                                             anno.getType().getShortName(),
                                             anno._casView.getView("UriView").getSofaDataURI(),
                                             anno.getBegin(),
-                                            ((IdentifiedAnnotation) anno).getPolarity() != 0
+                                            anno.getPolarity() == -1
                                     )
                         );
                     });
@@ -78,7 +81,8 @@ public class Runner {
                 DefaultJCasTermAnnotator.createAnnotatorDescription("/org/apache/ctakes/dictionary/lookup/david/custom.xml"),
                 AnalysisEngineFactory.createEngineDescription(IdentificationAnnotator.class),
                 //AnalysisEngineFactory.createEngineDescription(NegexAnnotator.class),
-                AnalysisEngineFactory.createEngineDescription(ContextAnnotator.class),
+                //AnalysisEngineFactory.createEngineDescription(ContextAnnotator.class),
+                AnalysisEngineFactory.createEngineDescription(PolarityCleartkAnalysisEngineWindowed.createAnnotatorDescription()),
                 AnalysisEngineFactory.createEngineDescription(LineWriter.class, LineWriter.CONSUMER_CLASS_NAME, "org.example.ctakesplayground.Runner$NegatedTermReader")
                 );
     }

@@ -97,13 +97,24 @@
         </dependency>
         <dependency>
             <groupId>org.example</groupId>
+            <artifactId>ctakes-assertion</artifactId>
+            <version>${project.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.apache.ctakes</groupId>
+                    <artifactId>ctakes-type-system</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>org.example</groupId>
             <artifactId>ctakes-ne-contexts</artifactId>
-            <version>${version}</version>
+            <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>org.example</groupId>
             <artifactId>ctakes-type-system</artifactId>
-            <version>${version}</version>
+            <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>commons-beanutils</groupId>
