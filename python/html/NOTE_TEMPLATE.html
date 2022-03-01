@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Note Highlighter</title>
+    <link rel="stylesheet" href="noteHighlighter.css">
+    <script type="text/javascript">
+        let offsetPairs = '';
+        let noteText = '####ALL_TEXT####';
+    </script>
+    <script type="text/javascript" src="####TITLE####.js"></script>
+    <script type="text/javascript" src="noteHighlighter.js"></script>
+</head>
+<body style='font-family:Arial;font-size:14px;'>
+<div style="position: fixed;top:0%;z-index:10;background-color:white;width:100%;">
+    <p><span style='font-size:16px;'><b>Filename: </b>####TITLE####</span></p>
+    <span style='font-size:16px;'><b>Choose Category to Highlight:</b>&nbsp;&nbsp;&nbsp;&nbsp;</span>
+    <span  id="negationButton" style='background-color:#ffffff; border:solid; color: black; border-width:2px;; border-radius:10px; black;padding: 10px 25px; text-align:center; text-decoration:none;  display: inline-block;  font-size: 16px;' onclick="highlightPhrases('negation', undefined, 'allText', 'negation');">Negation (####NUM_NEG####)</span>&nbsp;&nbsp;&nbsp;
+    <span  id="uncertaintyButton" style='background-color:#ffffff; border:solid; color: black; border-width:2px;; border-radius:10px; black;padding: 10px 25px; text-align:center; text-decoration:none;  display: inline-block;  font-size: 16px;' onclick="highlightPhrases('uncertainty', undefined, 'allText', 'uncertainty');">Uncertainty (####NUM_UNCER####)</span>&nbsp;&nbsp;&nbsp;
+    <span  id="familyButton" style='background-color:#ffffff; border:solid; color: black; border-width:2px;; border-radius:10px; black;padding: 10px 25px; text-align:center; text-decoration:none;  display: inline-block;  font-size: 16px;' onclick="highlightPhrases('family', undefined, 'allText', 'family');">Non-patient (####NUM_FAM####)</span>&nbsp;&nbsp;&nbsp;
+    <span  id="additionalButton" style='background-color:#ffffff; border:solid; color: black; border-width:2px;; border-radius:10px; black;padding: 10px 25px; text-align:center; text-decoration:none;  display: inline-block;  font-size: 16px;' onclick="highlightPhrases('additional', undefined, 'allText', 'additional');">Additional (0)</span>
+<br/>
+<hr/>
+</div><!-- end of the fixed area -->
+
+<div style="padding-top:100px;z-index:5;overflow:auto;">
+
+<pre style="white-space: pre-wrap;">
+    <div id='allText'></div>
+</pre>
+</div>
+</body>
+</html>
+<script type="text/javascript">
+negationOffsets = ####NEGATION_OFFSETS####;
+uncertaintyOffsets = ####UNCERTAINTY_OFFSETS####;
+familyOffsets = ####FAMILY_OFFSETS####;
+
+window.addEventListener('load', () => loadText('allText', 'additionalButton'));
+</script>
